@@ -1,0 +1,54 @@
+#!/usr/bin/ruby
+# encoding: utf-8
+
+require './lib/tasks.rb'
+
+class Pango
+  def initialize(nick, passwd, server, chan, port, logDir)
+    @nick = nick
+    @passwd = passwd
+    @server = server
+    @chan = chan
+    @port = port
+    @logDir = logDir
+  end
+  def start
+    puts "Starting up..."
+    configure do |c|
+      c.nick = @nick
+      c.server = @server
+      c.port = @port
+    end
+
+    #why... (needed for loops)
+    servTmp = @server
+    chTmp = @chan
+    pasTmp = @passwd
+    ldTmp = @logDir
+    chTmp = @chan
+    on :connect do
+      puts "connected to " + servTmp
+      chTmp.each_with_index do |item, index|
+        join chTmp[index]
+        puts "joined " + chTmp[index]
+      end
+      
+      #join chTmp
+      #puts "joined " + chTmp
+
+      msg channel, "msg NickServ identify #{pasTmp}"
+    end
+    on :channel, /.*/ do
+      #log(chTmp, ldTmp)
+      youtube(message)
+      fc(message)
+      da(message)
+      info(message)
+      update(message)
+      villager(message)
+      #miiverse(message)
+      #roll(message)
+      #emoticion(message)
+    end
+  end
+end
